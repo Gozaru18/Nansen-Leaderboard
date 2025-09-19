@@ -1,6 +1,6 @@
 
-//const apiUrl = "/api/leaderboard";
-const apiUrl = "https://cors-anywhere.herokuapp.com/https://app.nansen.ai/api/points-leaderboard";
+const apiUrl = "/api/leaderboard";
+
 async function loadLeaderboard() {
   try {
     const res = await fetch(apiUrl);
@@ -88,4 +88,5 @@ async function loadLeaderboard() {
 
 
 loadLeaderboard();
+
 
