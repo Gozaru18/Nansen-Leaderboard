@@ -8,6 +8,8 @@
   ],
   "routes": [
     { "src": "/api/leaderboard", "dest": "/api/leaderboard.js" },
-    { "src": "/(.*)", "dest": "/index.html" }
+    { "src": "/style.css", "dest": "/style.css" },
+    { "src": "/script.js", "dest": "/script.js" },
+    { "src": "/", "dest": "/index.html" }
   ]
 }
