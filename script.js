@@ -176,4 +176,52 @@ window.addEventListener("scroll", () => {
 
 // Init
 loadInitial();
+// Search by EVM address
+async function searchAddress() {
+  const query = document.getElementById("searchInput").value.trim().toLowerCase();
+  const tbody = document.getElementById("leaderboard");
+
+  if (!query) {
+    alert("Please enter an EVM address to search.");
+    return;
+  }
+
+  tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">⏳ Searching...</td></tr>`;
+
+  try {
+    // fetch full dataset once (limit adjusted to cover all players)
+    const res = await fetch(`${apiUrl}?page=1&limit=8000`); 
+    const data = await res.json();
+
+    const found = data.players.filter(entry =>
+      (entry.evm_address || "").toLowerCase().includes(query)
+    );
+
+    if (found.length > 0) {
+      tbody.innerHTML = found.map(entry => {
+        const addr = entry.evm_address || "Unknown";
+        const shortAddr = addr.slice(0, 6) + "..." + addr.slice(-4);
+        return `
+          <tr>
+            <td>${entry.rank ?? "-"}</td>
+            <td class="address">${shortAddr}</td>
+            <td>${(entry.points_balance ?? 0).toLocaleString()}</td>
+            <td>${entry.tier ?? "-"}</td>
+          </tr>
+        `;
+      }).join("");
+    } else {
+      tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">❌ No results found</td></tr>`;
+    }
+  } catch (err) {
+    console.error(err);
+    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">⚠️ Error searching</td></tr>`;
+  }
+}
+
+// Attach to button and Enter key
+document.getElementById("searchBtn").addEventListener("click", searchAddress);
+document.getElementById("searchInput").addEventListener("keyup", (e) => {
+  if (e.key === "Enter") searchAddress();
+});
 
