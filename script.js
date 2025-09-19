@@ -96,16 +96,33 @@ let currentPage = 1;
 const limit = 50;
 let loading = false;
 let reachedEnd = false;
+let renderedCount = 0;
 const loaderRow = document.getElementById("loader-row");
 
 // Load summary + first batch
 async function loadInitial() {
-  const res = await fetch(`${apiUrl}?page=1&limit=${limit}`);
+  await fetchAndRender(`${apiUrl}?page=1&limit=${limit}`);
+  currentPage = 1;
+}
+
+async function fetchAndRender(url) {
+  loaderRow.style.display = "table-row";
+
+  const res = await fetch(url);
   const data = await res.json();
 
+  // Render summary always
   renderSummary(data);
+
+  // Reset table
+  const tbody = document.getElementById("leaderboard");
+  tbody.innerHTML = "";
+  renderedCount = 0;
+
   renderRows(data.players);
-  currentPage = 1;
+
+  loaderRow.style.display = "none";
+  return data;
 }
 
 // Render summary cards
@@ -131,52 +148,38 @@ function renderSummary(data) {
 // Render table rows
 function renderRows(players) {
   const tbody = document.getElementById("leaderboard");
-  tbody.innerHTML += players.map(entry => {
+  let html = "";
+
+  players.forEach((entry) => {
     const addr = entry.evm_address || "Unknown";
     const shortAddr = addr.slice(0, 6) + "..." + addr.slice(-4);
-    return `
+    const displayNo = ++renderedCount;
+    html += `
       <tr>
-        <td>${entry.rank ?? "-"}</td>
+        <td>${displayNo}</td>
         <td class="address">${shortAddr}</td>
         <td>${(entry.points_balance ?? 0).toLocaleString()}</td>
         <td>${entry.tier ?? "-"}</td>
       </tr>
     `;
-  }).join("");
+  });
+
+  tbody.insertAdjacentHTML("beforeend", html);
 }
 
-// Lazy load on scroll
-async function loadMore() {
-  if (loading || reachedEnd) return;
-  loading = true;
-
-  // Show loader
-  loaderRow.style.display = "table-row";
-
-  currentPage++;
-  const res = await fetch(`${apiUrl}?page=${currentPage}&limit=${limit}`);
-  const data = await res.json();
-
-  if (data.players.length === 0) {
-    reachedEnd = true;
-  } else {
-    renderRows(data.players);
-  }
-
-  // Hide loader
-  loaderRow.style.display = "none";
-  loading = false;
-}
-
-// Attach scroll listener
-window.addEventListener("scroll", () => {
-  if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 200) {
-    loadMore();
+// Search handler
+document.getElementById("searchInput").addEventListener("keyup", async (e) => {
+  const term = e.target.value.trim();
+  if (term.length >= 3) {
+    await fetchAndRender(`${apiUrl}?search=${encodeURIComponent(term)}&page=1&limit=${limit}`);
+  } else if (term === "") {
+    await loadInitial(); // Reset to normal if search cleared
   }
 });
 
 // Init
 loadInitial();
+
 
 
 
