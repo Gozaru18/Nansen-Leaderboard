@@ -1,5 +1,5 @@
 
-const apiUrl = "/api/leaderboard";
+const apiUrl = "leaderboard";
 
 async function loadLeaderboard() {
   try {
@@ -88,5 +88,6 @@ async function loadLeaderboard() {
 
 
 loadLeaderboard();
+
 
 
