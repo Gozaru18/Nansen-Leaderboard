@@ -1,9 +1,11 @@
-const apiUrl = "https://app.nansen.ai/api/points-leaderboard";
+
+const apiUrl = "/api/leaderboard";
 
 async function loadLeaderboard() {
   try {
     const res = await fetch(apiUrl);
     const allData = await res.json();
+    
 
     let totalNXP = 0;
     const totalPlayers = Array.isArray(allData) ? allData.length : 0;
@@ -83,5 +85,6 @@ async function loadLeaderboard() {
       `<tr><td colspan="4">Error loading data</td></tr>`;
   }
 }
+
 
 loadLeaderboard();
