@@ -1,7 +1,7 @@
 {
   "version": 2,
   "builds": [
-    { "src": "api/leaderboard.js", "use": "@vercel/node" },
+    { "src": "leaderboard.js", "use": "@vercel/node" },
     { "src": "index.html", "use": "@vercel/static" },
     { "src": "style.css", "use": "@vercel/static" },
     { "src": "script.js", "use": "@vercel/static" }
