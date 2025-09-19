@@ -176,20 +176,28 @@ window.addEventListener("scroll", () => {
 
 // Init
 loadInitial();
+// Reset + clear search
+function resetLeaderboard() {
+  document.getElementById("leaderboard").innerHTML = "";
+  currentPage = 1;
+  renderedCount = 0;
+  reachedEnd = false;
+  loadInitial(); // reload lazy load
+}
+
 // Search by EVM address
 async function searchAddress() {
   const query = document.getElementById("searchInput").value.trim().toLowerCase();
   const tbody = document.getElementById("leaderboard");
 
   if (!query) {
-    alert("Please enter an EVM address to search.");
+    resetLeaderboard();
     return;
   }
 
   tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">⏳ Searching...</td></tr>`;
 
   try {
-    // fetch full dataset once (limit adjusted to cover all players)
     const res = await fetch(`${apiUrl}?page=1&limit=8000`); 
     const data = await res.json();
 
@@ -219,9 +227,20 @@ async function searchAddress() {
   }
 }
 
-// Attach to button and Enter key
+// Attach listeners
+const searchInput = document.getElementById("searchInput");
+const clearBtn = document.getElementById("clearSearch");
+
 document.getElementById("searchBtn").addEventListener("click", searchAddress);
-document.getElementById("searchInput").addEventListener("keyup", (e) => {
+searchInput.addEventListener("keyup", (e) => {
   if (e.key === "Enter") searchAddress();
+  clearBtn.style.display = searchInput.value ? "block" : "none";
 });
+
+clearBtn.addEventListener("click", () => {
+  searchInput.value = "";
+  clearBtn.style.display = "none";
+  resetLeaderboard();
+});
+
 
