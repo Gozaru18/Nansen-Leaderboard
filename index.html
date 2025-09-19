@@ -15,16 +15,23 @@
 
     <!-- Leaderboard Table -->
     <table>
-      <thead>
-        <tr>
-          <th>Rank</th>
-          <th>EVM Address</th>
-          <th>NXP</th>
-          <th>Tier</th>
-        </tr>
-      </thead>
-      <tbody id="leaderboard"></tbody>
-    </table>
+  <thead>
+    <tr>
+      <th>Rank</th>
+      <th>EVM Address</th>
+      <th>NXP</th>
+      <th>Tier</th>
+    </tr>
+  </thead>
+  <tbody id="leaderboard"></tbody>
+  <tfoot>
+    <tr id="loader-row" style="display:none;">
+      <td colspan="4" style="text-align:center; padding:15px; color:#666;">
+        ⏳ Loading more ...
+      </td>
+    </tr>
+  </tfoot>
+</table>
 
     <div class="note" id="note"></div>
   </div>
