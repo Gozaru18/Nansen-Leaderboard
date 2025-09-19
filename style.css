@@ -28,6 +28,7 @@ td:first-child { font-weight:bold; }
 
 .search-bar {
   display: flex;
+  flex-wrap: wrap;   /* allow wrapping on small screens */
   justify-content: center;
   gap: 10px;
   margin-bottom: 20px;
@@ -36,7 +37,8 @@ td:first-child { font-weight:bold; }
 .search-wrapper {
   position: relative;
   flex: 1;
-  max-width: 400px;
+  min-width: 200px;   /* prevent collapsing too small */
+  max-width: 350px;   /* keeps it tidy */
 }
 
 .search-wrapper input {
@@ -59,6 +61,7 @@ td:first-child { font-weight:bold; }
 }
 
 .search-bar button {
+  flex-shrink: 0;
   padding: 10px 18px;
   background: #007bff;
   border: none;
@@ -72,4 +75,5 @@ td:first-child { font-weight:bold; }
 .search-bar button:hover {
   background: #0056b3;
 }
+
 
