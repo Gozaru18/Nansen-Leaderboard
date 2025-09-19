@@ -96,6 +96,7 @@ let currentPage = 1;
 const limit = 50;
 let loading = false;
 let reachedEnd = false;
+const loaderRow = document.getElementById("loader-row");
 
 // Load summary + first batch
 async function loadInitial() {
@@ -149,6 +150,9 @@ async function loadMore() {
   if (loading || reachedEnd) return;
   loading = true;
 
+  // Show loader
+  loaderRow.style.display = "table-row";
+
   currentPage++;
   const res = await fetch(`${apiUrl}?page=${currentPage}&limit=${limit}`);
   const data = await res.json();
@@ -159,6 +163,8 @@ async function loadMore() {
     renderRows(data.players);
   }
 
+  // Hide loader
+  loaderRow.style.display = "none";
   loading = false;
 }
 
@@ -171,7 +177,6 @@ window.addEventListener("scroll", () => {
 
 // Init
 loadInitial();
-
 
 
 
