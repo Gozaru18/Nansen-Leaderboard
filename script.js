@@ -1,5 +1,5 @@
 
-const apiUrl = "/api/leaderboard";
+/*const apiUrl = "/api/leaderboard";
 
 async function loadLeaderboard() {
   try {
@@ -87,7 +87,90 @@ async function loadLeaderboard() {
 }
 
 
-loadLeaderboard();
+loadLeaderboard();*/
+
+
+const apiUrl = "/api/leaderboard";
+
+let currentPage = 1;
+const limit = 50;
+let loading = false;
+let reachedEnd = false;
+
+// Load summary + first batch
+async function loadInitial() {
+  const res = await fetch(`${apiUrl}?page=1&limit=${limit}`);
+  const data = await res.json();
+
+  renderSummary(data);
+  renderRows(data.players);
+  currentPage = 1;
+}
+
+// Render summary cards
+function renderSummary(data) {
+  const cardsDiv = document.getElementById("cards");
+  cardsDiv.innerHTML = `
+    <div class="card"><h2>${data.totalPlayers.toLocaleString()}</h2><p>Total Players</p></div>
+    <div class="card"><h2>${data.totalNXP.toLocaleString()}</h2><p>Total NXP</p></div>
+  `;
+
+  Object.entries(data.ranges).forEach(([range, count]) => {
+    if (count > 0) {
+      cardsDiv.innerHTML += `
+        <div class="card">
+          <h2>${count.toLocaleString()}</h2>
+          <p>${range}</p>
+        </div>
+      `;
+    }
+  });
+}
+
+// Render table rows
+function renderRows(players) {
+  const tbody = document.getElementById("leaderboard");
+  tbody.innerHTML += players.map(entry => {
+    const addr = entry.evm_address || "Unknown";
+    const shortAddr = addr.slice(0, 6) + "..." + addr.slice(-4);
+    return `
+      <tr>
+        <td>${entry.rank ?? "-"}</td>
+        <td class="address">${shortAddr}</td>
+        <td>${(entry.points_balance ?? 0).toLocaleString()}</td>
+        <td>${entry.tier ?? "-"}</td>
+      </tr>
+    `;
+  }).join("");
+}
+
+// Lazy load on scroll
+async function loadMore() {
+  if (loading || reachedEnd) return;
+  loading = true;
+
+  currentPage++;
+  const res = await fetch(`${apiUrl}?page=${currentPage}&limit=${limit}`);
+  const data = await res.json();
+
+  if (data.players.length === 0) {
+    reachedEnd = true;
+  } else {
+    renderRows(data.players);
+  }
+
+  loading = false;
+}
+
+// Attach scroll listener
+window.addEventListener("scroll", () => {
+  if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 200) {
+    loadMore();
+  }
+});
+
+// Init
+loadInitial();
 
 
 
