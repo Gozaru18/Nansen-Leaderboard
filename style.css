@@ -18,4 +18,10 @@ tr:nth-child(even) { background:#f9f9f9; }
 tr:hover { background:#f1f1f1; }
 td:first-child { font-weight:bold; }
 .address { font-family:monospace; }
+
 .note { margin-top:10px; text-align:center; color:#666; font-size:14px; }
+
+#loader-row td {
+  font-style: italic;
+  color: #888;
+}
