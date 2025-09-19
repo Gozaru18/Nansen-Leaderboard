@@ -1,0 +1,21 @@
+body { font-family: Arial, sans-serif; background:#f4f6f8; margin:0; padding:20px; }
+.leaderboard-container {
+  max-width: 900px; margin:0 auto; background:#fff; border-radius:10px;
+  box-shadow:0px 2px 10px rgba(0,0,0,0.1); padding:20px;
+}
+h1 { text-align:center; margin-bottom:20px; color:#333; }
+.cards { display:flex; flex-wrap:wrap; gap:15px; margin-bottom:20px; justify-content:center; }
+.card {
+  flex:1 1 150px; background:#007bff; color:white; padding:15px;
+  border-radius:8px; text-align:center;
+}
+.card h2 { margin:0; font-size:22px; }
+.card p { margin:5px 0 0; font-size:14px; opacity:0.9; }
+table { width:100%; border-collapse:collapse; border-radius:8px; overflow:hidden; }
+thead { background:#007bff; color:white; }
+th, td { padding:12px 15px; border-bottom:1px solid #ddd; }
+tr:nth-child(even) { background:#f9f9f9; }
+tr:hover { background:#f1f1f1; }
+td:first-child { font-weight:bold; }
+.address { font-family:monospace; }
+.note { margin-top:10px; text-align:center; color:#666; font-size:14px; }
